@@ -3,6 +3,8 @@ package contacts.xiaozuzu.github.io.contactsbook.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -15,8 +17,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import contacts.xiaozuzu.github.io.contactsbook.R;
+import contacts.xiaozuzu.github.io.contactsbook.activity.AddContactActivity;
+import contacts.xiaozuzu.github.io.contactsbook.activity.MainActivity;
+import contacts.xiaozuzu.github.io.contactsbook.model.Contact;
+import contacts.xiaozuzu.github.io.contactsbook.util.SqlUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,23 +36,15 @@ public class ContactsFragment extends Fragment {
     private static final String TAG = "ContactsFragment";
     private ListView contactList;
     private View contentView;
-    private Context context;
+    private MainActivity mainActivity;
+
+    public static final String CONTACT_KEY = "contact";
 
     String[] alertMenuItems = {
             "呼叫","编辑","收藏"
     };
 
-    String[] names = {
-            "俎金好",
-            "周凯",
-            "张三",
-            "俎金好",
-            "周凯",
-            "张三",
-            "俎金好",
-            "周凯",
-            "张三"
-    };
+    List<Contact> contacts;
 
     public ContactsFragment() {
 
@@ -54,14 +55,15 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_contacts, container, false);
-        initView();
         return contentView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        mainActivity = (MainActivity)getActivity();
+        contacts = mainActivity.getContacts();
+        initView();
     }
 
     private void initView() {
@@ -71,12 +73,23 @@ public class ContactsFragment extends Fragment {
 
         contactList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(contacts.get(position).getNumber());
                 builder.setItems(alertMenuItems, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG,"which"+which);
+                        switch (which) {
+                            case 0:
+                                dialContact(position);
+                                break;
+                            case 1:
+                                editContact(position);
+                                break;
+                            case 2:
+                                collectContact(position);
+                                break;
+                        }
                     }
                 });
                 builder.create().show();
@@ -85,16 +98,42 @@ public class ContactsFragment extends Fragment {
         });
     }
 
+    private void collectContact(int position) {
+        Log.d(TAG,"collect");
+        SqlUtil sqlUtil = SqlUtil.getInstance(getActivity());
+        if (sqlUtil.writeContect(contacts.get(position))){
+            Toast.makeText(getActivity(),"收藏成功",Toast.LENGTH_SHORT).show();
+            mainActivity.getCollectFragment().getMyAdapter().notifyDataSetChanged();
+        }else {
+            Toast.makeText(getActivity(),"您已经收藏过该联系人",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void editContact(int position) {
+        Intent intent = new Intent(getActivity(), AddContactActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONTACT_KEY,contacts.get(position));
+        intent.putExtra(CONTACT_KEY, bundle);
+        startActivity(intent);
+    }
+
+    private void dialContact(int position) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + contacts.get(position).getNumber()));
+        startActivity(intent);
+    }
+
     class MyAdapter extends BaseAdapter{
 
         @Override
         public int getCount() {
-            return names.length;
+            return contacts.size();
         }
 
         @Override
-        public String getItem(int position) {
-            return names[position];
+        public Contact getItem(int position) {
+            return contacts.get(position);
         }
 
         @Override
@@ -111,7 +150,7 @@ public class ContactsFragment extends Fragment {
                 convertView.setTag(vh);
             }
             ViewHolder vh = (ViewHolder)convertView.getTag();
-            vh.nameText.setText(getItem(position));
+            vh.nameText.setText(getItem(position).getName());
             return convertView;
         }
         class ViewHolder{

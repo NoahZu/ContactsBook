@@ -24,19 +24,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="20sp"
+                android:textSize="30sp"
+                android:textColor="#000000"
                 android:text="" />
         </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#000"/>
+            android:background="@android:color/darker_gray"/>
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:columnCount="3"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="5dp">
         <Button
             android:id="@+id/one"
             android:layout_width="90dp"
