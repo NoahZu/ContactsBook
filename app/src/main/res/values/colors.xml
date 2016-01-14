@@ -6,4 +6,24 @@
     <color name="main_color">#0ddcff</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+
+    <color name="header_back1">#F44336</color>
+    <color name="header_back2">#E91E63</color>
+    <color name="header_back3">#9C27B0</color>
+    <color name="header_back4">#673AB7</color>
+    <color name="header_back5">#3F51B5</color>
+    <color name="header_back6">#2196F3</color>
+    <color name="header_back7">#03A9F4</color>
+    <color name="header_back8">#00BCD4</color>
+    <color name="header_back9">#009688</color>
+    <color name="header_back10">#4CAF50</color>
+    <color name="header_back11">#8BC34A</color>
+    <color name="header_back12">#CDDC39</color>
+    <color name="header_back13">#FFEB3B</color>
+    <color name="header_back14">#FFC107</color>
+    <color name="header_back15">#FF9800</color>
+    <color name="header_back16">#FF5722</color>
+    <color name="header_back17">#795548</color>
+    <color name="header_back18">#9E9E9E</color>
+    <color name="header_back19">#607D8B</color>
 </resources>

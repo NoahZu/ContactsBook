@@ -16,19 +16,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-    <ImageView
+        android:orientation="horizontal"
+        android:paddingLeft="10dp">
+    <TextView
         android:id="@+id/header_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:background="@mipmap/icon"/>
+        android:text="刘"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:background="@color/main_color"
+        />
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
         android:textSize="20sp"
         android:text="刘看山"/>
     </LinearLayout>

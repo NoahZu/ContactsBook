@@ -9,8 +9,10 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import java.util.List;
 
+import androidbasicutilproject.xiaozuzu.github.io.xzzandroidsupport.utils.LogUtil;
 import contacts.xiaozuzu.github.io.contactsbook.R;
 import contacts.xiaozuzu.github.io.contactsbook.model.Contact;
+import contacts.xiaozuzu.github.io.contactsbook.util.ColorUtil;
 
 public class SortAdapter extends BaseAdapter implements SectionIndexer {
     private List<Contact> list = null;
@@ -19,6 +21,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
     public SortAdapter(Context mContext, List<Contact> list) {
         this.mContext = mContext;
         this.list = list;
+        LogUtil.setTag("SortAdapter");
     }
 
     public int getCount() {
@@ -41,6 +44,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
             view = LayoutInflater.from(mContext).inflate(R.layout.contact_list_item, null);
             viewHolder.tvTitle = (TextView) view.findViewById(R.id.name);
             viewHolder.tvLetter = (TextView) view.findViewById(R.id.letter);
+            viewHolder.tvHeader = (TextView)view.findViewById(R.id.header_icon);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -56,7 +60,8 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
         }
 
         viewHolder.tvTitle.setText(this.list.get(position).getName());
-
+        viewHolder.tvHeader.setText(this.list.get(position).getName().subSequence(0, 1).toString());
+        viewHolder.tvHeader.setBackgroundColor(this.list.get(position).getHeaderColor());
         return view;
 
     }
@@ -65,6 +70,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
     final static class ViewHolder {
         TextView tvLetter;
         TextView tvTitle;
+        TextView tvHeader;
     }
 
 

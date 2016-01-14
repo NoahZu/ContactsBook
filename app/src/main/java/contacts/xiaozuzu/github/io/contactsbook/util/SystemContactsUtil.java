@@ -41,7 +41,7 @@ public class SystemContactsUtil {
         {
             String phoneNumber = phoneNumber=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String phoneName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            lists.add(new Contact(phoneName,phoneNumber));
+            lists.add(new Contact(context,phoneName,phoneNumber));
         }
         return  lists;
     }

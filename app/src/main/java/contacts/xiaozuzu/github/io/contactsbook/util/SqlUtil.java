@@ -56,7 +56,7 @@ public class SqlUtil {
         Cursor cursor = db.rawQuery(sql,null);
 
         while (cursor.moveToNext()){
-            Contact contact = new Contact(cursor.getString(1),cursor.getString(2));
+            Contact contact = new Contact(context,cursor.getString(1),cursor.getString(2));
             contacts.add(contact);
         }
         return contacts;

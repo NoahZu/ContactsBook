@@ -49,7 +49,7 @@ public class AddContactActivity extends AppCompatActivity {
                     Toast.makeText(AddContactActivity.this,"号码请输入数字",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                addContact(new Contact(name,number));
+                addContact(new Contact(AddContactActivity.this,name,number));
                 finish();
             }
         });
