@@ -17,10 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.util.Collections;
 import java.util.List;
 
 import contacts.xiaozuzu.github.io.contactsbook.R;
 import contacts.xiaozuzu.github.io.contactsbook.model.Contact;
+import contacts.xiaozuzu.github.io.contactsbook.model.PinyinComparator;
 import contacts.xiaozuzu.github.io.contactsbook.util.SqlUtil;
 
 /**
@@ -44,6 +48,7 @@ public class CollectFragment extends Fragment {
 
         SqlUtil sqlUtil = SqlUtil.getInstance(getActivity());
         contacts = sqlUtil.getContacts();
+        Collections.sort(contacts,new PinyinComparator());
         contentView = inflater.inflate(R.layout.fragment_collect, container, false);
         initView();
         return contentView;
@@ -83,15 +88,22 @@ public class CollectFragment extends Fragment {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.contact_list_item,null);
                 ViewHolder vh = new ViewHolder();
-                vh.nameText = (TextView)convertView.findViewById(R.id.name);
+                vh.tvLetter = (TextView)convertView.findViewById(R.id.letter);
+                vh.tvTitle = (TextView)convertView.findViewById(R.id.name);
+                vh.tvHeader = (TextView)convertView.findViewById(R.id.header_icon);
+                vh.tvLetter.setVisibility(View.GONE);
                 convertView.setTag(vh);
             }
             ViewHolder vh = (ViewHolder)convertView.getTag();
-            vh.nameText.setText(getItem(position).getName());
+            vh.tvTitle.setText(getItem(position).getName());
+            vh.tvHeader.setText(contacts.get(position).getName().subSequence(0, 1).toString());
+            vh.tvHeader.setBackgroundColor(contacts.get(position).getHeaderColor());
             return convertView;
         }
         class ViewHolder{
-            TextView nameText;
+            TextView tvLetter;
+            TextView tvTitle;
+            TextView tvHeader;
         }
     }
 
