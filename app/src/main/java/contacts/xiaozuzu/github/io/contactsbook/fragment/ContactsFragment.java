@@ -19,13 +19,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
 import java.util.List;
 
 import contacts.xiaozuzu.github.io.contactsbook.R;
 import contacts.xiaozuzu.github.io.contactsbook.activity.AddContactActivity;
 import contacts.xiaozuzu.github.io.contactsbook.activity.MainActivity;
+import contacts.xiaozuzu.github.io.contactsbook.adapter.SortAdapter;
 import contacts.xiaozuzu.github.io.contactsbook.model.Contact;
+import contacts.xiaozuzu.github.io.contactsbook.model.PinyinComparator;
 import contacts.xiaozuzu.github.io.contactsbook.util.SqlUtil;
+import contacts.xiaozuzu.github.io.contactsbook.widget.SideBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,13 +42,17 @@ public class ContactsFragment extends Fragment {
     private View contentView;
     private MainActivity mainActivity;
 
+    private SideBar sideBar;
+    private TextView dialog;
+    private SortAdapter adapter;
+    private List<Contact> contacts;
+
     public static final String CONTACT_KEY = "contact";
 
     String[] alertMenuItems = {
             "呼叫","编辑","收藏"
     };
 
-    List<Contact> contacts;
 
     public ContactsFragment() {
 
@@ -63,14 +71,28 @@ public class ContactsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mainActivity = (MainActivity)getActivity();
         contacts = mainActivity.getContacts();
+        Collections.sort(contacts,new PinyinComparator());
         initView();
     }
 
     private void initView() {
         contactList = (ListView)contentView.findViewById(R.id.contacts_list);
-        MyAdapter adapter = new MyAdapter();
-        contactList.setAdapter(adapter);
+        sideBar = (SideBar) contentView.findViewById(R.id.sidrbar);
+        dialog = (TextView) contentView.findViewById(R.id.dialog);
+        sideBar.setTextView(dialog);
+        sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
 
+            @Override
+            public void onTouchingLetterChanged(String s) {
+                int position = adapter.getPositionForSection(s.charAt(0));
+                if (position != -1) {
+                    contactList.setSelection(position + 1);
+                }
+
+            }
+        });
+        adapter = new SortAdapter(getActivity(),contacts);
+        contactList.setAdapter(adapter);
         contactList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
