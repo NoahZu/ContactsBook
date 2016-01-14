@@ -125,7 +125,7 @@ public class ContactsFragment extends Fragment {
         SqlUtil sqlUtil = SqlUtil.getInstance(getActivity());
         if (sqlUtil.writeContect(contacts.get(position))){
             Toast.makeText(getActivity(),"收藏成功",Toast.LENGTH_SHORT).show();
-            mainActivity.getCollectFragment().getMyAdapter().notifyDataSetChanged();
+            mainActivity.getCollectFragment().notifyDataSetChanged();
         }else {
             Toast.makeText(getActivity(),"您已经收藏过该联系人",Toast.LENGTH_SHORT).show();
         }

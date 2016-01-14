@@ -73,4 +73,13 @@ public class SqlUtil {
         }
         return false;
     }
+    public boolean delContact(Contact contact){
+        if (isExits(contact)){
+            String sql = "delete from contacts where name='"+contact.getName()+"' and phone='"+contact.getNumber()+"'";
+            db.execSQL(sql);
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

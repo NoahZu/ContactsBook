@@ -2,15 +2,19 @@ package contacts.xiaozuzu.github.io.contactsbook.fragment;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,6 +26,7 @@ import org.w3c.dom.Text;
 import java.util.Collections;
 import java.util.List;
 
+import androidbasicutilproject.xiaozuzu.github.io.xzzandroidsupport.utils.ToastUtil;
 import contacts.xiaozuzu.github.io.contactsbook.R;
 import contacts.xiaozuzu.github.io.contactsbook.model.Contact;
 import contacts.xiaozuzu.github.io.contactsbook.model.PinyinComparator;
@@ -65,6 +70,42 @@ public class CollectFragment extends Fragment {
         collectList = (ListView)contentView.findViewById(R.id.collect_list);
         myAdapter = new MyAdapter();
         collectList.setAdapter(myAdapter);
+        collectList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("不在收藏"+contacts.get(position).getName()+"?");
+                builder.setItems(new String[]{"删除", "呼叫"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            //// TODO: 2016/1/14 删除 
+                            if (SqlUtil.getInstance(getActivity()).delContact(contacts.get(position))){
+                                ToastUtil.show(getActivity(),"删除成功");
+                                contacts.remove(contacts.get(position));
+                                myAdapter.notifyDataSetChanged();
+                            }else {
+                                ToastUtil.show(getActivity(),"删除失败");
+                            }
+
+                        }
+                        if (which == 1) {
+                            //// TODO: 2016/1/14 呼叫
+                            dialContact(position);
+                        }
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
+    }
+
+    private void dialContact(int position) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + contacts.get(position).getNumber()));
+        startActivity(intent);
     }
 
     class MyAdapter extends BaseAdapter{
@@ -110,5 +151,9 @@ public class CollectFragment extends Fragment {
 
     public MyAdapter getMyAdapter() {
         return myAdapter;
+    }
+    public void notifyDataSetChanged(){
+        contacts = SqlUtil.getInstance(getActivity()).getContacts();
+        myAdapter.notifyDataSetChanged();
     }
 }
