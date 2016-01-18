@@ -16,6 +16,8 @@ import contacts.xiaozuzu.github.io.contactsbook.util.SystemContactsUtil;
 
 public class AddContactActivity extends AppCompatActivity {
 
+    public static final int RESULT_CODE = 2;
+    public static final String ADD_CONTACT = "add_contacr";
     private EditText nameEdit;
     private EditText numberEdit;
     private Button saveBtn;
@@ -26,8 +28,10 @@ public class AddContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_contact);
+
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(ContactsFragment.CONTACT_KEY);
+
         if (bundle != null){
             contact = (Contact)bundle.get(ContactsFragment.CONTACT_KEY);
         }
@@ -71,8 +75,13 @@ public class AddContactActivity extends AppCompatActivity {
     private void addContact(Contact contact) {
         SystemContactsUtil systemContactsUtil = SystemContactsUtil.getInstance(this);
         systemContactsUtil.addContact(contact);
+        Intent intent = new Intent();
+        intent.putExtra(ADD_CONTACT,contact);
+        setResult(RESULT_CODE,intent);
         Toast.makeText(this,"添加成功",Toast.LENGTH_LONG).show();
     }
+
+    
 
     private void initView() {
         nameEdit = (EditText)findViewById(R.id.edt_name);

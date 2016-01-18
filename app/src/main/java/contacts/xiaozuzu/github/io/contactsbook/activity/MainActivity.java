@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private SystemContactsUtil systemContactsUtil;
     private List<Contact> contacts;
 
+
+    public static final int REQUEST_CODE = 1;
+
     public DialFragment getDialFragment() {
         return dialFragment;
     }
@@ -54,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        systemContactsUtil = SystemContactsUtil.getInstance(this);
-        contacts = systemContactsUtil.getContacts();
         initFragment();
         initViews();
     }
@@ -71,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout)findViewById(R.id.tab_layout);
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         addContact = (FloatingActionButton)findViewById(R.id.id_add);
-
+        systemContactsUtil = SystemContactsUtil.getInstance(this);
+        contacts = systemContactsUtil.getContacts();
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,AddContactActivity.class);
-                startActivity(intent);
-
+                startActivityForResult(intent,REQUEST_CODE);
             }
         });
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -123,7 +124,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
+
     public List<Contact> getContacts(){
         return this.contacts;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == AddContactActivity.RESULT_CODE){
+            Contact contact = (Contact)data.getSerializableExtra(AddContactActivity.ADD_CONTACT);
+            contactsFragment.addContact(contact);
+        }
     }
 }

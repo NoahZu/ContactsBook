@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -114,6 +115,15 @@ public class DialFragment extends Fragment {
         delButton = (Button)contentView.findViewById(R.id.del_button);
         hintList = (ListView)contentView.findViewById(R.id.hint_list);
         hintList.setAdapter(myAdapter);
+        hintList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + hintContacts.get(position).getNumber().toString()));
+                startActivity(intent);
+            }
+        });
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

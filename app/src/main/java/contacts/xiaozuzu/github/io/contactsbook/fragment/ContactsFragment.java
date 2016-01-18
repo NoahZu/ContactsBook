@@ -179,4 +179,10 @@ public class ContactsFragment extends Fragment {
             TextView nameText;
         }
     }
+
+    public void addContact(Contact contact){
+        contacts.add(contact);
+        Collections.sort(contacts, new PinyinComparator());
+        adapter.notifyDataSetChanged();
+    }
 }
