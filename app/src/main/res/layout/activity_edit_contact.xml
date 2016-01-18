@@ -14,9 +14,11 @@
         <TextView
             android:id="@+id/close"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:gravity="center"
             android:textSize="20sp"
             android:text="关闭"/>
     </LinearLayout>
